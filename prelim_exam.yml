@@ -1,0 +1,53 @@
+---
+- hosts: all
+  become: yes
+
+  vars_files:
+    - /home/kazuki/Ogata_PrelimExam/config.yaml
+
+  tasks:
+
+    - name: Task 5.1 - Install the Latest python3 and pip3
+      package:
+        name:
+          - "{{ python_ver }}"
+          - "{{ pip_ver }}"
+        state: latest
+        update_cache: yes
+      when: ansible_distribution in ["CentOS", "Ubuntu"]
+
+    - name: Task 5.2 - Use pip3 as default pip
+      alternatives:
+        name: pip
+        path: "{{ path1_pip3 }}"
+        link: "{{ link1_pip }}"
+      when: ansible_distribution in ["CentOS", "Ubuntu"]
+
+    - name: Task 5.3 - Use python3 as default python
+      alternatives:
+        name: python
+        path: "{{ path2_python3 }}"
+        link: "{{ link2_python }}"
+      when: ansible_distribution in ["CentOS", "Ubuntu"]
+
+    - name: Task 5.4 - Install Java open-jdk
+      package:
+        name: "{{ 'java-1.8.0-openjdk-devel' if ansible_distribution == 'CentOS' else 'openjdk-11-jdk' }}"
+        update_cache: yes
+      when: ansible_distribution in ["CentOS", "Ubuntu"]
+
+    - name: Task 5.5 - Create Motd File
+      copy:
+        content: "{{ motd_file | default('Ansible Managed node by ' ~ansible_user) }}"
+        dest: /etc/motd
+      when: ansible_distribution in ["CentOS", "Ubuntu"]
+
+    - name: Task 5.6 - Create new User
+      user:
+        name: "{{ new_user }}"
+        state: present
+      when: ansible_distribution in ["CentOS", "Ubuntu"]
+
+    - name: Ansible Distribution Checker
+      debug:
+        var: ansible_distribution

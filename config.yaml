@@ -1,0 +1,13 @@
+
+python_ver: "python3"
+pip_ver: "python3-pip"
+new_user: "ogata"
+
+path1_pip3: "/usr/bin/pip3"
+link1_pip: "/usr/bin/pip"
+path2_python3: "/usr/bin/python3"
+link2_python: "/usr/bin/python"
+
+#Experiment for task 5.5: 
+#motd_file: "This motd is defined by a variable defined in config.yaml"
+
